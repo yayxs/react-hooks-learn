@@ -1,53 +1,61 @@
 import React, { ReactElement, useState, useEffect } from "react";
 import { Input, Container, Button, Box, Card, Switch } from "@material-ui/core";
-interface Props {}
 
-const MyInput = (): ReactElement => {
+
+const MyInput = () => {
   let [val, setVal] = useState(0);
+  const inputEl = useRef(null)
 
-  const handle = (ev) => {
-    var event = ev || event;
-    if (event.keyCode == 13) {
-      let ipt = document.querySelector(".MuiInput-input");
-      console.log(`聚焦事件触发`);
-      ipt?.focus();
-    }
-  };
+  // const handle = (ev) => {
+  //   var event = ev || event;
+  //   if (event.keyCode == 13) {
+  //     let ipt = document.querySelector(".MuiInput-input");
+  //     ipt?.focus();
+  //   }
+  // };
 
   useEffect(() => {
-    document.addEventListener("keydown", handle, false);
+    document.addEventListener("keydown", handleFocus, false);
 
     setInterval(() => {
       val++;
     }, 1000);
 
     return () => {
-      document.removeEventListener("keydown", handle);
+      document.removeEventListener("keydown", handleFocus);
     };
   });
+
+  const handleFocus = ()=>{
+    inputEl.current.focus()
+  }
   return (
     <>
       <Input
+      ref={inputEl}
         defaultValue={val}
         inputProps={{ "aria-label": "description" }}
-        onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        onClick={() => {
           setVal(e.target.value);
         }}
       />
+  <Button  onClick={handleFocus}> 聚焦</Button>
+
     </>
   );
 };
 
-export default function index({}: Props): ReactElement {
+export default function index() {
   const [isShowIpt, setIsShowIpt] = useState(true);
   const [state, setState] = React.useState({
     checkedA: true,
   });
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event) => {
     setIsShowIpt(!isShowIpt);
     setState({ ...state, [event.target.name]: event.target.checked });
   };
+
 
   return (
     <div>
